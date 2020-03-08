@@ -20,14 +20,14 @@ def count_conflicts(board):
     for i in range(0, n):
         c=i
         r=board[i]
-        #counting row conflicts
+        #count row conflicts
         row_freq[board[i]] += 1
         row_conflicts += (row_freq[board[i]] - 1)
-        #counting diagonal conflicts
+        #count diagonal conflicts
         diag_num = c-r+n
         diag_freq[diag_num] += 1
         diag_conflicts += (diag_freq[diag_num] - 1)
-        #counting inv. diagonal conflicts
+        #count inv. diagonal conflicts
         inv_diag_num = c+r
         inv_diag_freq[inv_diag_num] += 1
         inv_diag_conflicts += (inv_diag_freq[inv_diag_num] - 1)
@@ -40,7 +40,7 @@ def get_next_random_step(board):
     next_board = list(board)
     c = random.randint(0,len(board)-1)
     r = random.randint(0,len(board)-1)
-    next_board[c] = r;
+    next_board[c] = r
     conflicts = count_conflicts(next_board)
     return  next_board,conflicts
 
@@ -79,44 +79,44 @@ def probability(E1,E2,T):
         return False
 
 
+if __name__ =="__main__":
+    print("Enter The Number of Queen : ")
+    n = eval(input(""))
+    print("Enter Initial Temperatue : ")
+    T = eval(input(""))
+    print("Enter The Cooling Rate : ")
+    cooling_rate = eval(input(""))
 
-print("Enter The Number of Queen : ")
-n = eval(input(""))
-print("Enter Initial Temperatue : ")
-T = eval(input(""))
-print("Enter The Cooling Rate : ")
-cooling_rate = eval(input(""))
-
-board = get_random_board(n)
-best_board = list(board)
-E1 = count_conflicts(best_board)
-print("Initial board: ", board, " Conflicts: ", E1)
+    board = get_random_board(n)
+    best_board = list(board)
+    E1 = count_conflicts(best_board)
+    print("Initial board: ", board, " Conflicts: ", E1)
 
 
-while E1>0 and T>=1:
-    next_board, E2 = get_next_random_step(best_board)
-    #print("Next board:", next_board, " Conflicts: ", E2)
-    if E2 <= E1:
-        E1 = E2
-        best_board = list(next_board)
-    elif probability(E1,E2,T):
-        E1 = E2
-        best_board = list(next_board)
+    while E1>0 and T>=1:
+        next_board, E2 = get_next_random_step(best_board)
+        #print("Next board:", next_board, " Conflicts: ", E2)
+        if E2 <= E1:
+            E1 = E2
+            best_board = list(next_board)
+        elif probability(E1,E2,T):
+            E1 = E2
+            best_board = list(next_board)
+        else:
+            best_board,E1 = get_better_board(best_board)
+        T-=cooling_rate
+
+        #printing progress 
+        print(T)
+        print("Best board:", best_board, " Conflicts: ", E1)
+
+
+
+
+    if E1==0:
+        print("\nSolution Found with 0 conflict")
     else:
-        best_board,E1 = get_better_board(best_board)
-    T-=cooling_rate
-
-    #printing progress 
-    print(T)
-    print("Best board:", best_board, " Conflicts: ", E1)
+        print("\nsolution Not Found ",E1," conflict(s)")
 
 
-
-
-if E1==0:
-    print("\nSolution Found with 0 conflict")
-else:
-    print("\nsolution Not Found ",E1," conflict(s)")
-
-
-print("Best board: ", best_board)
+    print("Best board: ", best_board)
